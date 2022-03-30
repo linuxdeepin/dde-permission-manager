@@ -1,0 +1,11 @@
+[Unit]
+Description=deepin application permission service
+
+[Service]
+Type=dbus
+BusName=org.desktopspec.permission
+ExecStart=/usr/lib/deepin-permission-service
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

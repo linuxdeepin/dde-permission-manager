@@ -1,0 +1,26 @@
+<interface name="org.desktopspec.permission">
+  <method name="request">
+    <arg direction="in" type="s" name="appid" />
+    <arg direction="in" type="as" name="permissionid" />
+    <arg direction="out" type="ai" name="results" />
+    <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="IntArray"/>
+  </method>
+  <method name="request">
+    <arg direction="in" type="s" name="appid" />
+    <arg direction="in" type="s" name="permissionid" />
+    <arg direction="out" type="i" name="result" />"
+  </method>
+  <method name="request">
+    <arg direction="in" type="s" name="appid" />
+    <arg direction="in" type="s" name="permissionid" />
+    <arg direction="in" type="s" name="description" />
+    <arg direction="out" type="i" name="result" />"
+  </method>
+  <method name="set">
+    <arg direction="in" type="s" name="appid" />
+    <arg direction="in" type="s" name="permission" />
+  </method>
+  <method name="reset">
+    <arg direction="in" type="s" name="appid" />
+  </method>
+</interface>
