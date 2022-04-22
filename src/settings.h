@@ -9,6 +9,7 @@ struct SettingData {
     typedef int AccessResult;
 
     QString AppId;
+    QString PermissionGroup;
     QString PermissionId;
     AccessResult Result;
     QDateTime Modified = QDateTime::currentDateTimeUtc();
@@ -21,7 +22,8 @@ public:
     ~Settings();
 
     bool saveSettings(const SettingData& data);
-    SettingData::AccessResult result(const QString& id, const QString& PermissionId);
+    SettingData::AccessResult result(const QString& appId, const QString& permissionGroup, const QString& permissionId);
+    bool removeSettings(const QString& appId, const QString& permissionGroup);
 
 private:
     std::unique_ptr<SettingsPrivate> d_ptr;

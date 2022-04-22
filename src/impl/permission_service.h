@@ -10,15 +10,15 @@ typedef QVector<int> IntArray;
 class PermissionService : public QObject, protected QDBusContext {
     Q_OBJECT
 public:
-    PermissionService(QObject *parent = nullptr);
+    explicit PermissionService(QObject *parent = nullptr);
     ~PermissionService();
 
 public Q_SLOTS: // METHODS
-    int request(const QString &appid, const QString &permissionid);
-    int request(const QString &appid, const QString &permissionid, const QString &description);
-    IntArray request(const QString &appid, const QStringList &permissionid);
-    void reset(const QString &appid);
-    void set(const QString &appid, const QString &permission);
+    int Request(const QString &appId, const QString &permissionGroup,const QString &permissionId);
+    int Request(const QString &appId, const QString &permissionGroup, const QString &permissionId, const QString &title, const QString &description);
+    IntArray Request(const QString &appId, const QString &permissiongGroup, const QStringList &permissionId);
+    void Reset(const QString &appId, const QString &permissiongGroup);
+    void Set(const QString &appId, const QString &permissiongGroup, const QString &permissionId, const int &value);
 };
 
 #endif /* AD0CF546_BF40_4B81_864F_93F98EEE99AF */

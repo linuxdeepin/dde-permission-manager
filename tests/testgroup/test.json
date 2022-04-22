@@ -1,0 +1,19 @@
+{
+    "id":"test",
+    "skip_auto_allow":"",
+    "name":"测试",
+    "title":"Allow \"%1\" to use test permissions",
+    "description":"Supplementary Instructions for Testing Permissions",
+    "prefer":"allow_once",
+    "options":["allow", "deny", "allow_once", "deny_once"],
+    "translations": {
+        "title":[
+            {"language":"zh_CN", "text":"是否允许\"%1\"使用测试权限"},
+            {"language":"ko", "text":"\"%1\"이(가) 테스트 권한을 사용하도록 허용"}
+        ],
+        "description":[
+            {"language":"zh_CN", "text":"测试权限的补充说明"},
+            {"language":"ko", "text":"테스트 권한에 대한 추가 지침"}
+        ]
+    }
+}

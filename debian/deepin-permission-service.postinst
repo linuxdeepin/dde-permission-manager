@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+
+mkdir -p /usr/share/permission/defaultapppermission
+chmod 777 /usr/share/permission/defaultapppermission

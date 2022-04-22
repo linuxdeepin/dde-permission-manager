@@ -1,11 +1,12 @@
 #include "permission_service.h"
+#include "permissionoption.h"
 
 #include <QDBusConnectionInterface>
 #include <QDBusMessage>
 #include <QDebug>
 #include <QException>
 
-#include "../settings/settings.h"
+#include "settings.h"
 #include "clientinterface.h"
 #include "permissionpolicy.h"
 
@@ -16,39 +17,39 @@ PermissionService::PermissionService(QObject *parent) : QObject(parent), QDBusCo
 
 PermissionService::~PermissionService() {}
 
-int PermissionService::request(const QString &appid, const QString &permissionid)
+int PermissionService::Request(const QString &appId, const QString &permissionGroup, const QString &permissionId)
 {
-    PermissionPolicy policy(permissionid);
+    PermissionPolicy policy(permissionGroup, permissionId);
     if (!policy.isValid()) {
         return -1;
     }
 
-    return request(appid, permissionid, policy.description());
+    return Request(appId, permissionGroup, permissionId, policy.title(), policy.description());
 }
 
-int PermissionService::request(const QString &appid, const QString &permissionid, const QString &description)
+int PermissionService::Request(const QString &appId, const QString &permissionGroup, const QString &permissionId, const QString &title, const QString &description)
 {
-    PermissionPolicy policy(permissionid);
+    PermissionPolicy policy(permissionGroup, permissionId);
     if (!policy.isValid()) {
         return -1;
     }
-
-    const QDBusConnection &conn = connection();
-    const QDBusMessage    &msg  = message();
-    const uint            &uid  = conn.interface()->serviceUid(msg.service()).value();
-    const uint            &pid  = conn.interface()->servicePid(msg.service()).value();
+    // TODO: control
+    // const QDBusConnection &conn = connection();
+    // const QDBusMessage    &msg  = message();
+    // const uint            &uid  = conn.interface()->serviceUid(msg.service()).value();
+    // const uint            &pid  = conn.interface()->servicePid(msg.service()).value();
 
     // show the box
-    auto func = [appid, permissionid, policy, description] {
+    auto func = [appId, permissionGroup, permissionId, policy, title, description] {
         Settings settings;
         try {
-            auto result = settings.result(appid, permissionid);
+            auto result = settings.result(appId, permissionGroup, permissionId);
             return result;
         }
-        catch (QException exp) {
+        catch (QException &exp) {
             // show gui
             org::desktopspec::permission::client client("org.desktopspec.permission.Client", "/org/desktopspec/permission/Client", QDBusConnection::sessionBus());
-            auto                                 reply = client.request(description.arg(appid), policy.options());
+            auto                                 reply = client.Request(title.arg(appId), description, policy.prefer(), policy.options());
             reply.waitForFinished();
             if (reply.isError()) {
                 qWarning() << "[DBus] [Warning] " << reply.error();
@@ -59,18 +60,16 @@ int PermissionService::request(const QString &appid, const QString &permissionid
                 return -2;
             }
 
-            // fake data
             SettingData data{
-                appid,
-                permissionid,
-                policy.options().indexOf(reply.value()),
+                appId,
+                permissionGroup,
+                permissionId,
+                PermissionOption::getInstance()->getId(reply.value()),
             };
 
-            if (reply.value() == "allow_once" || reply.value() == "deny_once") {
-                return data.Result;
+            if (PermissionOption::getInstance()->isNeedSaved(reply.value())) {
+                settings.saveSettings(data);
             }
-
-            settings.saveSettings(data);
             return data.Result;
         }
     };
@@ -78,20 +77,38 @@ int PermissionService::request(const QString &appid, const QString &permissionid
     return func();
 }
 
-IntArray PermissionService::request(const QString &appid, const QStringList &permissionid)
+IntArray PermissionService::Request(const QString &appId, const QString &permissionGroup, const QStringList &permissionId)
 {
-    // check valid before request
-    for (const QString &id : permissionid) {
+    // check valid before Request
+    for (const QString &id : permissionId) {
+        // TODO
+        Q_UNUSED(id)
     }
 
     IntArray result;
-    for (const QString &id : permissionid) {
+    for (const QString &id : permissionId) {
         // read permission description
-        result << request(appid, id);
+        result << Request(appId, permissionGroup, id);
     }
 
     return result;
 }
 
-void PermissionService::reset(const QString &appid) {}
-void PermissionService::set(const QString &appid, const QString &permission) {}
+void PermissionService::Reset(const QString &appId, const QString &permissiongGroup) 
+{
+    Settings settings;
+    settings.removeSettings(appId, permissiongGroup);
+}
+void PermissionService::Set(const QString &appId, const QString &permissionGroup, const QString &permissionId, const int &value) 
+{
+    SettingData data{
+        appId,
+        permissionGroup,
+        permissionId,
+        value,
+    };
+    Settings settings;
+    if (PermissionOption::getInstance()->isNeedSavedByIndex(value)) {
+        settings.saveSettings(data);
+    }
+}

@@ -1,9 +1,11 @@
 #include "permission_client.h"
+#include "permissionoption.h"
 
-#include <DDialog>
 #include <QSharedPointer>
+#include <QTimer>
 
 #include "permissionpolicy.h"
+#include "widgets/clientdialog.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -11,13 +13,23 @@ PermissionClient::PermissionClient(QObject *parent) : QObject(parent) {}
 
 PermissionClient::~PermissionClient() {}
 
-QString PermissionClient::request(const QString &title, const QStringList &options)
+QString PermissionClient::Request(const QString &title, const QString &description, const QString &prefer, const QStringList &options)
 {
-    QSharedPointer<DDialog>    dialog(new DDialog);
-    std::map<QString, QString> buttonsTr{ { "allow", tr("Allow") }, { "deny", tr("Deny") }, { "deny_once", tr("Deny Once") }, { "allow_once", tr("Allow Once") } };
+    QSharedPointer<ClientDialog> dialog(new ClientDialog);
+    bool isSetDefaultButtom = false;
     for (auto const &option : options) {
-        dialog->addButton(buttonsTr[option]);
+        if (option == prefer) {
+            isSetDefaultButtom = true;
+            dialog->addButton(PermissionOption::getInstance()->getTs(option), true, DDialog::ButtonNormal);
+        } else {
+            dialog->addButton(PermissionOption::getInstance()->getTs(option), false, DDialog::ButtonNormal);
+        }
+    }
+    if (!isSetDefaultButtom) {
+        dialog->startBottomCloseTimer();
     }
     dialog->setTitle(title);
+    dialog->setMessage(description);
+
     return options.value(dialog->exec(), "");
 }

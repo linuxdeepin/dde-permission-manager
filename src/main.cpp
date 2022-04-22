@@ -1,4 +1,5 @@
 #include <DApplication>
+#include <QTranslator>
 
 #include "clientadaptor.h"
 #include "permissionadaptor.h"
@@ -8,6 +9,12 @@ DWIDGET_USE_NAMESPACE
 int main(int argc, char** argv)
 {
     auto               app     = DApplication::globalApplication(argc, argv);
+
+    QTranslator translator;
+    qDebug() << "language:" << QLocale::system().name();
+    translator.load("/usr/share/permission/translations/deepin-permission-service_" + QLocale::system().name());
+    app->installTranslator(&translator);
+
     PermissionClient*  client  = new PermissionClient;
     PermissionService* service = new PermissionService;
 

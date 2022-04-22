@@ -1,6 +1,8 @@
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+set(CMAKE_CXX_FLAGS "-W -Wall -fPIC -fstack-protector-all -z relro -z noexecstack -z now -pie")
+
 find_package(Qt5 REQUIRED COMPONENTS Core DBus Widgets)
 find_package(DtkCore REQUIRED)
 find_package(DtkWidget REQUIRED)
@@ -19,14 +21,18 @@ qt5_add_dbus_interfaces(DBUS_INTERFACES
                      )
 set(SRCS
     main.cpp
+    settings.h
+    settings.cpp
+    permissionpolicy.h
+    permissionpolicy.cpp
+    permissionoption.h
+    permissionoption.cpp
     impl/permission_service.h
     impl/permission_service.cpp
     impl/permission_client.h
     impl/permission_client.cpp
-    settings/settings.h
-    settings/settings.cpp
-    permissionpolicy.h
-    permissionpolicy.cpp
+    widgets/clientdialog.h
+    widgets/clientdialog.cpp
 )
 
 add_executable(deepin-permission-service ${SRCS} ${ADAPTER_SOURCES} ${DBUS_INTERFACES})
@@ -37,3 +43,9 @@ target_link_libraries(deepin-permission-service
     dtkcore
     dtkwidget
 )
+
+install(DIRECTORY DESTINATION share/permission/policy)
+#file(MAKE_DIRECTORY defaultapppermission)
+#install(DIRECTORY defaultapppermission DESTINATION share/permission
+#    DIRECTORY_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ GROUP_WRITE WORLD_READ WORLD_WRITE)
+install(TARGETS deepin-permission-service DESTINATION bin)

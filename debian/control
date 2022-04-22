@@ -11,8 +11,8 @@ Standards-Version: 3.9.8
 Homepage: http://www.deepin.org
 
 Package: deepin-permission-service
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends},
 Built-Using: ${misc:Built-Using}
-Description: Provides application resource management
- and control services for the dde desktop environment. 
+Description: deepin permission manager
+ Provides application resource management and control services for the dde desktop environment.

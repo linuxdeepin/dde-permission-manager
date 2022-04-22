@@ -1,26 +1,33 @@
 <interface name="org.desktopspec.permission">
-  <method name="request">
-    <arg direction="in" type="s" name="appid" />
-    <arg direction="in" type="as" name="permissionid" />
+  <method name="Request">
+    <arg direction="in" type="s" name="appId" />
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="in" type="as" name="permissionId" />
     <arg direction="out" type="ai" name="results" />
     <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="IntArray"/>
   </method>
-  <method name="request">
-    <arg direction="in" type="s" name="appid" />
-    <arg direction="in" type="s" name="permissionid" />
+  <method name="Request">
+    <arg direction="in" type="s" name="appId" />
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="in" type="s" name="permissionId" />
     <arg direction="out" type="i" name="result" />"
   </method>
-  <method name="request">
-    <arg direction="in" type="s" name="appid" />
-    <arg direction="in" type="s" name="permissionid" />
+  <method name="Request">
+    <arg direction="in" type="s" name="appId" />
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="in" type="s" name="permissionId" />
+    <arg direction="in" type="s" name="title" />
     <arg direction="in" type="s" name="description" />
     <arg direction="out" type="i" name="result" />"
   </method>
-  <method name="set">
-    <arg direction="in" type="s" name="appid" />
-    <arg direction="in" type="s" name="permission" />
+  <method name="Set">
+    <arg direction="in" type="s" name="appId" />
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="in" type="s" name="permissionId" />
+    <arg direction="in" type="i" name="value" />
   </method>
-  <method name="reset">
-    <arg direction="in" type="s" name="appid" />
+  <method name="Reset">
+    <arg direction="in" type="s" name="appId" />
+    <arg direction="in" type="s" name="permissiongGroup" />
   </method>
 </interface>

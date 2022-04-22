@@ -8,11 +8,11 @@ typedef QVector<int> IntArray;
 class PermissionClient : public QObject {
     Q_OBJECT
 public:
-    PermissionClient(QObject* parent = nullptr);
+    explicit PermissionClient(QObject* parent = nullptr);
     ~PermissionClient();
 
 public Q_SLOTS: // METHODS
-    QString request(const QString &title, const QStringList& options);
+    QString Request(const QString &title, const QString &description, const QString &prefer, const QStringList& options);
 };
 
 #endif  // PERMISSION_CLIENT_H_
