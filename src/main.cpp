@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 
     QTranslator translator;
     qDebug() << "language:" << QLocale::system().name();
-    translator.load("/usr/share/permission/translations/deepin-permission-service_" + QLocale::system().name());
+    translator.load("/usr/share/permission/translations/dde-permission-manager_" + QLocale::system().name());
     app->installTranslator(&translator);
 
     PermissionClient*  client  = new PermissionClient;

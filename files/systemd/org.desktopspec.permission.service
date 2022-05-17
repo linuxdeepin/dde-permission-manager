@@ -4,7 +4,7 @@ Description=deepin application permission service
 [Service]
 Type=dbus
 BusName=org.desktopspec.permission
-ExecStart=/usr/bin/deepin-permission-service
+ExecStart=/usr/bin/dde-permission-manager
 Restart=on-failure
 
 [Install]

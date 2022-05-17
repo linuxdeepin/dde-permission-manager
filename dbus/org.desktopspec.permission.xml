@@ -1,4 +1,8 @@
 <interface name="org.desktopspec.permission">
+  <method name="PermissionList">
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="out" type="as" name="results" />
+  </method>
   <method name="Request">
     <arg direction="in" type="s" name="appId" />
     <arg direction="in" type="s" name="permissionGroup" />

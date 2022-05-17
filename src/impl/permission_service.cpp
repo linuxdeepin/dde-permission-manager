@@ -17,6 +17,11 @@ PermissionService::PermissionService(QObject *parent) : QObject(parent), QDBusCo
 
 PermissionService::~PermissionService() {}
 
+QStringList PermissionService::PermissionList(const QString &permissionGroup)
+{
+    return PermissionPolicy::getPolicyList(permissionGroup);
+}
+
 int PermissionService::Request(const QString &appId, const QString &permissionGroup, const QString &permissionId)
 {
     PermissionPolicy policy(permissionGroup, permissionId);

@@ -14,6 +14,7 @@ public:
     ~PermissionService();
 
 public Q_SLOTS: // METHODS
+    QStringList PermissionList(const QString &permissionGroup);
     int Request(const QString &appId, const QString &permissionGroup,const QString &permissionId);
     int Request(const QString &appId, const QString &permissionGroup, const QString &permissionId, const QString &title, const QString &description);
     IntArray Request(const QString &appId, const QString &permissiongGroup, const QStringList &permissionId);

@@ -8,16 +8,16 @@ find_package(DtkCore REQUIRED)
 find_package(DtkWidget REQUIRED)
 
 qt5_add_dbus_adaptor(ADAPTER_SOURCES
-                     ../DBus/org.desktopspec.permission.xml
+                     ../dbus/org.desktopspec.permission.xml
                      impl/permission_service.h
                      PermissionService)
 qt5_add_dbus_adaptor(ADAPTER_SOURCES
-                     ../DBus/org.desktopspec.permission.client.xml
+                     ../dbus/org.desktopspec.permission.client.xml
                      impl/permission_client.h
                      PermissionClient
                      )
 qt5_add_dbus_interfaces(DBUS_INTERFACES
-                     ../DBus/org.desktopspec.permission.client.xml
+                     ../dbus/org.desktopspec.permission.client.xml
                      )
 set(SRCS
     main.cpp
@@ -35,8 +35,8 @@ set(SRCS
     widgets/clientdialog.cpp
 )
 
-add_executable(deepin-permission-service ${SRCS} ${ADAPTER_SOURCES} ${DBUS_INTERFACES})
-target_link_libraries(deepin-permission-service
+add_executable(dde-permission-manager ${SRCS} ${ADAPTER_SOURCES} ${DBUS_INTERFACES})
+target_link_libraries(dde-permission-manager
     Qt5::Core
     Qt5::DBus
     Qt5::Widgets
@@ -48,4 +48,4 @@ install(DIRECTORY DESTINATION share/permission/policy)
 #file(MAKE_DIRECTORY defaultapppermission)
 #install(DIRECTORY defaultapppermission DESTINATION share/permission
 #    DIRECTORY_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ GROUP_WRITE WORLD_READ WORLD_WRITE)
-install(TARGETS deepin-permission-service DESTINATION bin)
+install(TARGETS dde-permission-manager DESTINATION bin)

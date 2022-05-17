@@ -1,7 +1,6 @@
 #ifndef PERMISSIONPOLICY_H
 #define PERMISSIONPOLICY_H
 
-#include <QString>
 #include <QStringList>
 #include <QJsonObject>
 #include <QMap>
@@ -19,6 +18,9 @@ class PermissionPolicy
 {
 public:
     PermissionPolicy(const QString& permissionGroup, const QString& permissionId);
+
+    static QStringList getPolicyList(const QString& permissionGroup);
+
     inline bool isValid() const {
         return m_isValid;
     }

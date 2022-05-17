@@ -28,6 +28,30 @@ PermissionPolicy::PermissionPolicy(const QString& permissionGroup, const QString
         transactionsJsonParse(obj);
 }
 
+QStringList PermissionPolicy::getPolicyList(const QString& permissionGroup)
+{
+    QStringList ids;
+    QDir dir("/usr/share/permission/policy/" + permissionGroup);
+    QFileInfoList fileInfoList = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+    for (auto fileInfo : fileInfoList) {
+        if (fileInfo.suffix() != "json") {
+            continue;
+        }
+        QFile file(fileInfo.absoluteFilePath());
+        if (!file.open(QFile::Text | QFile::ReadOnly)) {
+            qWarning() << "open file failed";
+            continue;
+        }
+        const QJsonObject& obj = QJsonDocument::fromJson(file.readAll()).object();
+        file.close();
+        QString id = obj["id"].toString();
+        if (!id.isEmpty()) {
+            ids << id;
+        }
+    }
+    return ids;
+}
+
 void PermissionPolicy::transactionsJsonParse(const QJsonObject& obj)
 {
         if(obj.contains("translations")) {
