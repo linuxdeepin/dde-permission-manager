@@ -2,7 +2,7 @@
 #define CLIENTDIALOG_H
 
 #include <DDialog>
-#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <DLabel>
 #include <QTimer>
 
@@ -25,9 +25,10 @@ public:
     int buttonCount();
 
     void startBottomCloseTimer();
+    QString closeTimerText(int num);
 
 private:
-    QVBoxLayout *m_buttonLayout;
+    QHBoxLayout *m_buttonLayout;
     DLabel *m_titleLabel;
     DLabel *m_messageLabel;
     QList<QAbstractButton*> m_buttonList;

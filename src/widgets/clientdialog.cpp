@@ -8,6 +8,7 @@
 #include <DFontSizeManager>
 #include <DWarningButton>
 #include <DSuggestButton>
+#include <QApplication>
 
 ClientDialog::ClientDialog(QWidget *parent)
     : DDialog(parent)
@@ -23,14 +24,16 @@ ClientDialog::ClientDialog(QWidget *parent)
     m_titleLabel = new DLabel();
     m_titleLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
     m_titleLabel->setWordWrap(true);
-    m_titleLabel->setAlignment(Qt::AlignLeft);
+    m_titleLabel->setAlignment(Qt::AlignHCenter);
     m_titleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     DFontSizeManager *fontManager =  DFontSizeManager::instance();
-    fontManager->bind(m_titleLabel, DFontSizeManager::T5, QFont::Medium);
+    fontManager->bind(m_titleLabel, DFontSizeManager::T5, QFont::DemiBold);
     m_messageLabel = new DLabel();
+    m_messageLabel->setAlignment(Qt::AlignHCenter);
+    fontManager->bind(m_messageLabel, DFontSizeManager::T8, QFont::Normal);
     QVBoxLayout *textLayout = new QVBoxLayout();
     textLayout->setMargin(0);
-    textLayout->setContentsMargins(60, 0, 30, 0);
+    textLayout->setContentsMargins(30, 0, 30, 0);
     textLayout->addWidget(m_titleLabel);
     textLayout->addWidget(m_messageLabel);
     mainLayout->addLayout(textLayout);
@@ -43,13 +46,14 @@ ClientDialog::ClientDialog(QWidget *parent)
     QHBoxLayout *leftLayout = new QHBoxLayout();
     leftLayout->setMargin(0);
     leftLayout->setContentsMargins(0, 0, 0, 0);
-    leftLayout->addSpacing(60);
+    leftLayout->addSpacing(30);
     frameLayout->addLayout(leftLayout);
 
     // 弹框选项部分
-    m_buttonLayout = new QVBoxLayout();
+    m_buttonLayout = new QHBoxLayout();
     m_buttonLayout->setMargin(0);
     m_buttonLayout->setContentsMargins(20, 0, 20, 20);
+    m_buttonLayout->setSpacing(40);
     frameLayout->addLayout(m_buttonLayout);
     // 选项倒计时关闭
     m_clickedButtonIndex = -1;
@@ -65,7 +69,7 @@ ClientDialog::ClientDialog(QWidget *parent)
             return;
         }
         m_defaultButtonCount--;
-        m_defaultButton->setText(m_defaultButtonText+"("+QString::number(m_defaultButtonCount)+"s)");
+        m_defaultButton->setText(m_defaultButtonText + closeTimerText(m_defaultButtonCount));
         if (m_defaultButtonCount == -1) {
             m_closeTimer->stop();
             int closeIndex = m_buttonList.indexOf(m_defaultButton);
@@ -77,16 +81,23 @@ ClientDialog::ClientDialog(QWidget *parent)
     // 弹框底部
     QVBoxLayout *rightLayout = new QVBoxLayout();
     rightLayout->setMargin(0);
-    rightLayout->setContentsMargins(0, 0, 0, 20);
+    rightLayout->setContentsMargins(0, 0, 0, 10);
     rightLayout->addStretch();
     m_CloseLabel = new DLabel();
     m_CloseLabel->setText("");
-    m_CloseLabel->setFixedWidth(60);
+    m_CloseLabel->setFixedWidth(30);
     rightLayout->addWidget(m_CloseLabel);
     frameLayout->addLayout(rightLayout);
 
     mainLayout->addLayout(frameLayout);
     addContent(mainWidget);
+
+    // 右上角选项
+    this->setCloseButtonVisible(false);
+
+    // 左上角icon
+    this->setIcon(QIcon::fromTheme("preferences-system"));
+
 }
 
 ClientDialog::~ClientDialog()
@@ -117,6 +128,7 @@ int ClientDialog::addButton(const QString &text, bool isDefault, ButtonType type
         button = new QPushButton(this);
         break;
     }
+    button->setMinimumSize(135, 45);
 
     button->setText(text);
     button->setAttribute(Qt::WA_NoMousePropagation);
@@ -149,7 +161,7 @@ int ClientDialog::addButton(const QString &text, bool isDefault, ButtonType type
         m_defaultButton = button;
         m_defaultButtonText = text;
         m_defaultButtonCount = 15;
-        button->setText(text+"("+QString::number(m_defaultButtonCount)+"s)");
+        button->setText(text + closeTimerText(m_defaultButtonCount));
         m_closeTimer->start();
     }
 
@@ -211,4 +223,9 @@ void ClientDialog::startBottomCloseTimer()
         }
     });
     bottomTimer->start();
+}
+
+QString ClientDialog::closeTimerText(int num)
+{
+    return "  ("+QString::number(num)+"s)";
 }

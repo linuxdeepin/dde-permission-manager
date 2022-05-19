@@ -4,8 +4,9 @@
     "name":"测试",
     "title":"Allow \"%1\" to use test permissions",
     "description":"Supplementary Instructions for Testing Permissions",
-    "prefer":"allow_once",
-    "options":["allow", "deny", "allow_once", "deny_once"],
+    "prefer":"deny",
+    "type":"system",
+    "options":["deny", "allow"],
     "translations": {
         "title":[
             {"language":"zh_CN", "text":"是否允许\"%1\"使用测试权限"},
@@ -14,6 +15,10 @@
         "description":[
             {"language":"zh_CN", "text":"测试权限的补充说明"},
             {"language":"ko", "text":"테스트 권한에 대한 추가 지침"}
+        ],
+        "name":[
+            {"language":"zh_CN", "text":"测试"},
+            {"language":"ko", "text":"MMM"}
         ]
     }
 }

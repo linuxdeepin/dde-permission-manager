@@ -6,12 +6,12 @@
     <message>
         <location filename="../src/option.cpp" line="15"/>
         <source>Allow</source>
-        <translation type="unfinished">始终允许</translation>
+        <translation type="unfinished">允许</translation>
     </message>
     <message>
         <location filename="../src/option.cpp" line="16"/>
         <source>Deny</source>
-        <translation type="unfinished">始终拒绝</translation>
+        <translation type="unfinished">禁止</translation>
     </message>
     <message>
         <location filename="../src/option.cpp" line="17"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../src/option.cpp" line="18"/>
         <source>Deny Once</source>
-        <translation type="unfinished">拒绝本次</translation>
+        <translation type="unfinished">禁止本次</translation>
     </message>
 </context>
 </TS>
