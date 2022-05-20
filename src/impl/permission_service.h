@@ -5,7 +5,11 @@
 #include <QDBusContext>
 #include <QVector>
 
-typedef QVector<int> IntArray;
+#include "../utils/dconfig_settings.h"
+#include "../../dbus/types/permissions_info.h"
+#include "permissionpolicy.h"
+
+DCORE_USE_NAMESPACE
 
 class PermissionService : public QObject, protected QDBusContext {
     Q_OBJECT
@@ -15,11 +19,17 @@ public:
 
 public Q_SLOTS: // METHODS
     QStringList PermissionList(const QString &permissionGroup);
-    int Request(const QString &appId, const QString &permissionGroup,const QString &permissionId);
-    int Request(const QString &appId, const QString &permissionGroup, const QString &permissionId, const QString &title, const QString &description);
-    IntArray Request(const QString &appId, const QString &permissiongGroup, const QStringList &permissionId);
-    void Reset(const QString &appId, const QString &permissiongGroup);
-    void Set(const QString &appId, const QString &permissiongGroup, const QString &permissionId, const int &value);
+    QString Request(const QString &appId, const QString &permissionGroup,const QString &permissionId);
+    QString Request(const QString &appId, const QString &permissionGroup, const QString &permissionId, const QString &title, const QString &description);
+    QStringList Request(const QString &appId, const QString &permissionGroup, const QStringList &permissionId);
+    void Reset(const QString &appId, const QString &permissionGroup);
+    void Set(const QString &appId, const QString &permissionGroup, const QString &permissionId, const QString &value);
+    QStringList GetRegisterAppPermissionIds(const QString &appId, const QString &permissionGroup);
+    void RegistAppPermissions(const QString &appId, const QString &permissionGroup, const PermissionsInfo &permissionsInfo);
+    void ShowDisablePesmissionDialog(const QString &appId, const QString &permissionGroup, const QString &permissionId);
+
+private:
+    QString parseAppPermissionKeyDconf(const QString& appPermissionDconfKey, const QString &appId, const QString &permissionGroup, const QString &permissionId, const PermissionPolicy& policy, const QString &title, const QString &description);
 };
 
 #endif /* AD0CF546_BF40_4B81_864F_93F98EEE99AF */

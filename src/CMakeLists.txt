@@ -33,6 +33,14 @@ set(SRCS
     impl/permission_client.cpp
     widgets/clientdialog.h
     widgets/clientdialog.cpp
+    utils/dconfig_settings.h
+    utils/dconfig_settings.cpp
+    utils/common.h
+    utils/common.cpp
+    utils/phase_pm_dconfig.h
+    utils/phase_pm_dconfig.cpp
+    ../dbus/types/permissions_info.h
+    ../dbus/types/permissions_info.cpp
 )
 
 add_executable(dde-permission-manager ${SRCS} ${ADAPTER_SOURCES} ${DBUS_INTERFACES})

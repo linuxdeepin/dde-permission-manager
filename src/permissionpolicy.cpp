@@ -19,13 +19,39 @@ PermissionPolicy::PermissionPolicy(const QString& permissionGroup, const QString
         m_id = obj["id"].toString();
         m_skip_auto_allow = obj["skip_auto_allow"].toBool();
         m_name = obj["name"].toString();
-        m_title = obj["title"].toString();
-        m_description = obj["description"].toString();
         m_prefer = obj["prefer"].toString();
         m_options = obj["options"].toVariant().toStringList();
+        m_registerMode = obj["registerMode"].toString();
+        m_type = obj["type"].toString();
         m_isValid = true;
 
-        transactionsJsonParse(obj);
+        nameTransactionsJsonParse(obj);
+        parseDialogContent(obj);
+}
+
+void PermissionPolicy::parseDialogContent(const QJsonObject& obj) {
+    if (!obj.contains("dialogContent")) {
+        qWarning() << "permission policy not contain dialog";
+        return;
+    }
+
+    if (!obj["dialogContent"].isArray()) {
+        qWarning() << "permission policy invalid format: is not an array";
+        return;
+    }
+
+    const QJsonArray dialogArray = obj["dialogContent"].toArray();
+    struct DialogContents dialogContents;
+    for (int i = 0; i < dialogArray.size(); ++i) {
+        if (dialogArray[i].isObject()) {
+            QJsonObject dialogObj = dialogArray[i].toObject();
+            dialogContents.dialogName = dialogObj["dialogName"].toString();
+            dialogContents.title = dialogObj["title"].toString();
+            dialogContents.description = dialogObj["description"].toString();
+            dialogContents.transactions = transactionsJsonParse(dialogObj);
+            m_dialogContents.append(dialogContents);
+        }
+    }
 }
 
 QStringList PermissionPolicy::getPolicyList(const QString& permissionGroup)
@@ -52,35 +78,51 @@ QStringList PermissionPolicy::getPolicyList(const QString& permissionGroup)
     return ids;
 }
 
-void PermissionPolicy::transactionsJsonParse(const QJsonObject& obj)
-{
-        if(obj.contains("translations")) {
-            const QJsonObject &tsObj = obj["translations"].toObject();
-            if(tsObj.contains("title"))
-            {
-                if(tsObj["title"].isArray())
-                {
-                    const QJsonArray &titleArray = tsObj["title"].toArray();
-                    for (int i = 0; i < titleArray.size(); i++) {
-                        if (titleArray.at(i).isObject()) {
-                            const QJsonObject &titleObj = titleArray.at(i).toObject();
-                            m_transactions.titleMap[titleObj["language"].toString()] = titleObj["text"].toString();
-                        }
-                    }
-                }
-            }
-            if(tsObj.contains("description"))
-            {
-                if(tsObj["description"].isArray())
-                {
-                    const QJsonArray &descriptionArray = tsObj["description"].toArray();
-                    for (int i = 0; i < descriptionArray.size(); i++) {
-                        if (descriptionArray.at(i).isObject()) {
-                            const QJsonObject &descObj = descriptionArray.at(i).toObject();
-                            m_transactions.descriptionMap[descObj["language"].toString()] = descObj["text"].toString();
-                        }
+void PermissionPolicy::nameTransactionsJsonParse(const QJsonObject& obj) {
+    if(obj.contains("translations")) {
+        const QJsonObject &tsObj = obj["translations"].toObject();
+        if(tsObj.contains("name")) {
+            if(tsObj["name"].isArray()) {
+                const QJsonArray &nameArray = tsObj["name"].toArray();
+                for (int i = 0; i < nameArray.size(); i++) {
+                    if (nameArray.at(i).isObject()) {
+                        const QJsonObject &descObj = nameArray.at(i).toObject();
+                        m_names.nameMap[descObj["language"].toString()] = descObj["text"].toString();
                     }
                 }
             }
         }
+    }
+}
+
+struct Transactions PermissionPolicy::transactionsJsonParse(const QJsonObject& obj)
+{
+    Transactions transactions;
+    if(obj.contains("translations")) {
+        const QJsonObject &tsObj = obj["translations"].toObject();
+        if(tsObj.contains("title")) {
+            if(tsObj["title"].isArray()) {
+                const QJsonArray &titleArray = tsObj["title"].toArray();
+                for (int i = 0; i < titleArray.size(); i++) {
+                    if (titleArray.at(i).isObject()) {
+                        const QJsonObject &titleObj = titleArray.at(i).toObject();
+                        transactions.titleMap[titleObj["language"].toString()] = titleObj["text"].toString();
+                    }
+                }
+            }
+        }
+        if(tsObj.contains("description")) {
+            if(tsObj["description"].isArray()) {
+                const QJsonArray &descriptionArray = tsObj["description"].toArray();
+                for (int i = 0; i < descriptionArray.size(); i++) {
+                    if (descriptionArray.at(i).isObject()) {
+                        const QJsonObject &descObj = descriptionArray.at(i).toObject();
+                        transactions.descriptionMap[descObj["language"].toString()] = descObj["text"].toString();
+                    }
+                }
+            }
+        }
+    }
+
+    return transactions;
 }

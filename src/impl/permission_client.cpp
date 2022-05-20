@@ -33,3 +33,16 @@ QString PermissionClient::Request(const QString &title, const QString &descripti
 
     return options.value(dialog->exec(), "");
 }
+
+QString PermissionClient::ShowDisablePesmissionDialog(const QString &title, const QString &description, const QStringList &options)
+{
+    QSharedPointer<ClientDialog> dialog(new ClientDialog);
+    for (auto const &option : options) {
+        dialog->addButton(option, false, DDialog::ButtonNormal);
+    }
+
+    dialog->setTitle(title);
+    dialog->setMessage(description);
+
+    return options.value(dialog->exec(), "");
+}

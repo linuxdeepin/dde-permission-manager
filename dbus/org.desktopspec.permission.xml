@@ -7,14 +7,13 @@
     <arg direction="in" type="s" name="appId" />
     <arg direction="in" type="s" name="permissionGroup" />
     <arg direction="in" type="as" name="permissionId" />
-    <arg direction="out" type="ai" name="results" />
-    <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="IntArray"/>
+    <arg direction="out" type="as" name="results" />
   </method>
   <method name="Request">
     <arg direction="in" type="s" name="appId" />
     <arg direction="in" type="s" name="permissionGroup" />
     <arg direction="in" type="s" name="permissionId" />
-    <arg direction="out" type="i" name="result" />"
+    <arg direction="out" type="s" name="result" />
   </method>
   <method name="Request">
     <arg direction="in" type="s" name="appId" />
@@ -22,16 +21,32 @@
     <arg direction="in" type="s" name="permissionId" />
     <arg direction="in" type="s" name="title" />
     <arg direction="in" type="s" name="description" />
-    <arg direction="out" type="i" name="result" />"
+    <arg direction="out" type="s" name="result" />
   </method>
   <method name="Set">
     <arg direction="in" type="s" name="appId" />
     <arg direction="in" type="s" name="permissionGroup" />
     <arg direction="in" type="s" name="permissionId" />
-    <arg direction="in" type="i" name="value" />
+    <arg direction="in" type="s" name="value" />
   </method>
   <method name="Reset">
     <arg direction="in" type="s" name="appId" />
-    <arg direction="in" type="s" name="permissiongGroup" />
+    <arg direction="in" type="s" name="permissionGroup" />
+  </method>
+  <method name="GetRegisterAppPermissionIds">
+    <arg direction="in" type="s" name="appId" />
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="out" type="as" name="result" />
+  </method>
+  <method name="RegistAppPermissions">
+    <arg direction="in" type="s" name="appId" />
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="in" type="a{ss}" name="permissionsInfo" />
+    <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="PermissionsInfo" />
+  </method>
+  <method name="ShowDisablePesmissionDialog">
+    <arg direction="in" type="s" name="appId" />
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="in" type="s" name="permissionId" />
   </method>
 </interface>

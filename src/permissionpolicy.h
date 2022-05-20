@@ -14,6 +14,19 @@ struct Transactions
     QMap<QString, QString> descriptionMap;
 };
 
+struct NameTransactions
+{
+    QMap<QString, QString> nameMap;
+};
+
+struct DialogContents
+{
+    QString dialogName;
+    QString title;
+    QString description;
+    Transactions transactions;
+};
+
 class PermissionPolicy
 {
 public:
@@ -41,20 +54,34 @@ public:
         return m_name;
     }
 
-    inline QString title() const {
+    inline QString title(const QString dialogName) const {
         QString language = QLocale::system().name();
-        if (m_transactions.titleMap.contains(language)) {
-            return m_transactions.titleMap[language];
+        for (int i = 0; i < m_dialogContents.size(); ++i) {
+            if (m_dialogContents[i].dialogName == dialogName) {
+                if (m_dialogContents[i].transactions.titleMap.contains(language)) {
+                    return m_dialogContents[i].transactions.titleMap[language];
+                } else {
+                    return m_dialogContents[i].title;
+                }
+            }
         }
-        return m_title;
+
+        return "";
     }
 
-    inline QString description() const {
+    inline QString description(const QString dialogName) const {
         QString language = QLocale::system().name();
-        if (m_transactions.descriptionMap.contains(language)) {
-            return m_transactions.descriptionMap[language];
+        for (int i = 0; i < m_dialogContents.size(); ++i) {
+            if (m_dialogContents[i].dialogName == dialogName) {
+                if (m_dialogContents[i].transactions.descriptionMap.contains(language)) {
+                    return m_dialogContents[i].transactions.descriptionMap[language];
+                } else {
+                    return m_dialogContents[i].description;
+                }
+            }
         }
-        return m_description;
+
+        return "";
     }
 
     inline QString prefer() const {
@@ -65,8 +92,18 @@ public:
         return m_options;
     }
 
+    inline QString type() const {
+        return m_type;
+    }
+
+    inline QString registerMode() const {
+        return m_registerMode;
+    }
+
 private:
-    void transactionsJsonParse(const QJsonObject& obj);
+    struct Transactions transactionsJsonParse(const QJsonObject& obj);
+    void parseDialogContent(const QJsonObject& obj);
+    void nameTransactionsJsonParse(const QJsonObject& obj);
 
 private:
     bool m_isValid;
@@ -77,8 +114,12 @@ private:
     QString m_title;
     QString m_description;
     QString m_prefer;
+    QString m_type; // system session。区分该权限是系统级还是用户级。
+    QString m_registerMode; // limit、notlimit。limit指该权限需要被注册才能使用，notlimit无需注册。默认limit。
     QStringList m_options;
-    struct Transactions m_transactions;
+    QList<DialogContents> m_dialogContents;
+    Transactions m_transactions;
+    NameTransactions m_names;
 };
 
 #endif // PERMISSIONPOLICY_H

@@ -12,6 +12,7 @@ public:
     ~PermissionClient();
 
 public Q_SLOTS: // METHODS
+    QString ShowDisablePesmissionDialog(const QString &title, const QString &description, const QStringList& options);
     QString Request(const QString &title, const QString &description, const QString &prefer, const QStringList& options);
 };
 

@@ -1,18 +1,14 @@
 cmake_minimum_required(VERSION 3.2)
 project(dde-permission-manager VERSION 1.0.0 LANGUAGES CXX)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX /usr)
 endif ()
-
 add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(files)
-
 execute_process(COMMAND bash "translate_generation.sh"
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 file(GLOB QM_FILES "translations/*.qm")
