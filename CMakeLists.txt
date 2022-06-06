@@ -9,6 +9,7 @@ endif ()
 add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(files)
+add_subdirectory(misc)
 execute_process(COMMAND bash "translate_generation.sh"
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 file(GLOB QM_FILES "translations/*.qm")
