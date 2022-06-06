@@ -26,7 +26,7 @@ public Q_SLOTS: // METHODS
     void Set(const QString &appId, const QString &permissionGroup, const QString &permissionId, const QString &value);
     QStringList GetRegisterAppPermissionIds(const QString &appId, const QString &permissionGroup);
     void RegistAppPermissions(const QString &appId, const QString &permissionGroup, const PermissionsInfo &permissionsInfo);
-    void ShowDisablePesmissionDialog(const QString &appId, const QString &permissionGroup, const QString &permissionId);
+    void ShowDisablePermissionDialog(const QString &appId, const QString &permissionGroup, const QString &permissionId);
 
 private:
     QString parseAppPermissionKeyDconf(const QString& appPermissionDconfKey, const QString &appId, const QString &permissionGroup, const QString &permissionId, const PermissionPolicy& policy, const QString &title, const QString &description);

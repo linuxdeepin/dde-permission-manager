@@ -44,7 +44,7 @@
     <arg direction="in" type="a{ss}" name="permissionsInfo" />
     <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="PermissionsInfo" />
   </method>
-  <method name="ShowDisablePesmissionDialog">
+  <method name="ShowDisablePermissionDialog">
     <arg direction="in" type="s" name="appId" />
     <arg direction="in" type="s" name="permissionGroup" />
     <arg direction="in" type="s" name="permissionId" />

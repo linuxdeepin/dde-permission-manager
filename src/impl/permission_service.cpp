@@ -118,7 +118,7 @@ QStringList PermissionService::GetRegisterAppPermissionIds(const QString &appId,
     return PhasePMDconfig::getPermissionList(appId, permissionGroup, systemAppPermissionRegistKey);
 }
 
-void PermissionService::ShowDisablePesmissionDialog(const QString &appId, const QString &permissionGroup, const QString &permissionId)
+void PermissionService::ShowDisablePermissionDialog(const QString &appId, const QString &permissionGroup, const QString &permissionId)
 {
     PermissionPolicy policy(permissionGroup, permissionId);
     if (!policy.isValid()) {
@@ -126,7 +126,7 @@ void PermissionService::ShowDisablePesmissionDialog(const QString &appId, const 
     }
     const QStringList options = {"Cancel", "Go to Settings"};
     org::desktopspec::permission::client client("org.desktopspec.permission.Client", "/org/desktopspec/permission/Client", QDBusConnection::sessionBus());
-    auto reply = client.ShowDisablePesmissionDialog(policy.title("denyPrompt").arg(appId), policy.description("denyPrompt"), options);
+    auto reply = client.ShowDisablePermissionDialog(policy.title("denyPrompt").arg(appId), policy.description("denyPrompt"), options);
     reply.waitForFinished();
     if (reply.isError()) {
         qWarning() << "[DBus] [Warning] " << reply.error();
