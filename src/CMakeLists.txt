@@ -53,7 +53,5 @@ target_link_libraries(dde-permission-manager
 )
 
 install(DIRECTORY DESTINATION share/permission/policy)
-#file(MAKE_DIRECTORY defaultapppermission)
-#install(DIRECTORY defaultapppermission DESTINATION share/permission
-#    DIRECTORY_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ GROUP_WRITE WORLD_READ WORLD_WRITE)
+
 install(TARGETS dde-permission-manager DESTINATION bin)
