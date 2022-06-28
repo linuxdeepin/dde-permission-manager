@@ -49,4 +49,32 @@
     <arg direction="in" type="s" name="permissionGroup" />
     <arg direction="in" type="s" name="permissionId" />
   </method>
+  <method name="GetPermissionInfo">
+    <arg direction="out" type="s" name="permissionInfo" />
+  </method>
+  <method name="SetPermissionInfo">
+    <arg direction="in" type="s" name="appId" />
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="in" type="s" name="permissionId" />
+    <arg direction="in" type="s" name="value" />
+    <arg direction="out" type="b" name="result" />
+  </method>
+  <method name="GetPermissionEnable">
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="in" type="s" name="permissionId" />
+    <arg direction="out" type="b" name="enable" />
+  </method>
+  <method name="SetPermissionEnable">
+    <arg direction="in" type="s" name="permissionGroup" />
+    <arg direction="in" type="s" name="permissionId" />
+    <arg direction="in" type="b" name="enable" />
+    <arg direction="out" type="b" name="result" />
+  </method>
+  <signal name="PermissionInfoChanged">
+  </signal>
+  <signal name="PermissionEnableChanged">
+    <arg name="permissionGroup" type="s" />
+    <arg name="permissionId" type="s" />
+    <arg name="enable" type="b" />
+  </signal>
 </interface>

@@ -1,12 +1,31 @@
-#include "common.h"
-
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 #include <QDBusMessage>
-
 #include <QDebug>
+#include <QVariant>
 
-UserType checkUserIsAdmin() {
+#include <polkit-qt5-1/PolkitQt1/Authority>
+
+#include "common.h"
+
+using namespace PolkitQt1;
+
+bool checkAuth(const QString &actionId)
+{
+    Authority::Result authenticationResult;
+    authenticationResult = Authority::instance()->checkAuthorizationSync(actionId, UnixProcessSubject(getpid()),
+                                                           Authority::AllowUserInteraction);
+
+    qWarning() << "authenticationResult: " << authenticationResult;
+    if (Authority::Result::Yes != authenticationResult) {
+        return false;
+    }
+
+    return true;
+}
+
+UserType checkUserIsAdmin()
+{
     struct passwd *user = getpwuid(getuid());
     if (!user) {
         qWarning() << "call getpwuid failed";

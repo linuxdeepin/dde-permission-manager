@@ -3,6 +3,10 @@
 #include <unistd.h>
 #include <pwd.h>
 
+#include <QString>
+#include <QVariantMap>
+#include <QMetaType>
+
 enum UserType {
     UserTypeStandard = 0,
     UserTypeAdmin,
@@ -12,6 +16,6 @@ enum UserType {
 };
 
 UserType checkUserIsAdmin();
-
+bool checkAuth(const QString &actionId);
 
 #endif // COMMON_H

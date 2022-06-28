@@ -31,8 +31,10 @@
 #include "../../dbus/types/permissions_info.h"
 
 DCORE_USE_NAMESPACE
-const QString pmAppId = "dde-permission-manager";
-const QString appPermissionDconfJson = "org.desktopspec.permission.dconfig";
+
+extern const QString systemAppPermissionRegistKey;
+extern const QString sessionAppPermissionDconfKey;
+extern const QString systemAppPermissionDconfKey ;
 
 enum DConfRtnType {
     dconfInvalidFormat = -3,
@@ -45,8 +47,9 @@ enum DConfRtnType {
     dconfMax = 3,
 };
 
-inline QString generateAppPermissionsKey(const QString &appId, const QString &permissionGroup) {
-    return appId + "+" + permissionGroup;
+inline QString generatePermissionsKey(const QString &arg1, const QString &arg2)
+{
+    return arg1 + "+" + arg2;
 }
 
 // Dconfig 配置类
@@ -62,14 +65,22 @@ public:
     // 获取应用对应权限的值
     static int getPermissionValue(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QString &permissionId);
     // 获取应用的权限列表以及权限的值
-    static QVariantMap getPermissionMap(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey);
+    static QVariantMap getAppPermissionMap(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey);
+    // 获取权限列表以及对应值
+    static QVariantMap getPermissionMap(const QString& appPermissionDconfKey);
+    // 获取权限对应的总开关
+    static bool getPermissionEnable(const QString &permissionGroup, const QString &permissionId);
 
     // 设置应用对应权限的值
     static bool setPermissionValue(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QString &permissionId, const QString &permissionValue);
     // 设置应用的权限列表以及权限的值
     static bool setPermissionInfo(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const PermissionsInfo &permissionsInfo);
-    // 获取应用的权限列表以及权限的值
+    // 设置应用的权限列表以及权限的值
     static void setPermissionMap(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QVariantMap& toBeWriteMap);
+    // 设置权限对应的总开关
+    static void setPermissionEnable(const QString &permissionGroup, const QString &permissionId, const bool &enable);
+    // 重置应用的权限
+    static void resetAppPermission(const QString &appId, const QString &permissionGroup);
 };
 
 #endif // PHASEPMDCONFIG

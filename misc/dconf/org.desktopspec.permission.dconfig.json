@@ -31,6 +31,16 @@
             "description": "Stores the permissions and default permission values of system-level applications set by different permission groups.",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "Permissions_Enable": {
+            "value": {},
+            "serial": 0,
+            "flags": [],
+            "name": "Permissions_Enable",
+            "name[zh_CN]": "*****",
+            "description": "Switch with different permissions.",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }

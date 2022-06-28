@@ -6,6 +6,9 @@ set(CMAKE_CXX_FLAGS "-W -Wall -fPIC -fstack-protector-all -z relro -z noexecstac
 find_package(Qt5 REQUIRED COMPONENTS Core DBus Widgets)
 find_package(DtkCore REQUIRED)
 find_package(DtkWidget REQUIRED)
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(Polkit-qt5 REQUIRED IMPORTED_TARGET polkit-qt5-agent-1 polkit-qt5-1)
 
 qt5_add_dbus_adaptor(ADAPTER_SOURCES
                      ../dbus/org.desktopspec.permission.xml
@@ -43,13 +46,19 @@ set(SRCS
     ../dbus/types/permissions_info.cpp
 )
 
-add_executable(dde-permission-manager ${SRCS} ${ADAPTER_SOURCES} ${DBUS_INTERFACES})
+add_executable(dde-permission-manager
+    ${SRCS}
+    ${ADAPTER_SOURCES}
+    ${DBUS_INTERFACES}
+)
+
 target_link_libraries(dde-permission-manager
     Qt5::Core
     Qt5::DBus
     Qt5::Widgets
     dtkcore
     dtkwidget
+    PkgConfig::Polkit-qt5
 )
 
 install(DIRECTORY DESTINATION share/permission/policy)

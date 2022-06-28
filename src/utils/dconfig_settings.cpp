@@ -24,15 +24,8 @@
 #include <QSharedPointer>
 #include <QDebug>
 
-DconfigSettings::DconfigSettings()
-{
-
-}
-
-DconfigSettings::~DconfigSettings()
-{
-
-}
+DconfigSettings::DconfigSettings() {}
+DconfigSettings::~DconfigSettings() {}
 
 DConfig *DconfigSettings::ConfigPtr(const QString &appId, const QString &name)
 {
@@ -70,7 +63,7 @@ bool DconfigSettings::ConfigSaveValue(const QString &appId, const QString &name,
     QScopedPointer<DConfig> config(ConfigPtr(appId, name));
     if (config && config->isValid() && config->keyList().contains(key)) {
         config->setValue(key, value);
-        // dconf频繁读写，大概率有写失败错误，此log甩锅
+        // dconf频繁读写，大概率有写失败错误
         qWarning() << "set value: " << key << value;
         return true;
     }

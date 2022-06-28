@@ -24,16 +24,27 @@
 #include <QSharedPointer>
 #include <QDebug>
 
-PhasePMDconfig::PhasePMDconfig() {
+const QString pmAppId = "dde-permission-manager";
+const QString appPermissionDconfJson = "org.desktopspec.permission.dconfig";
+const QString permissionsEnable = "Permissions_Enable";
+
+const QString systemAppPermissionRegistKey = "System_App_Permissions_Regist_Info";
+const QString sessionAppPermissionDconfKey = "Session_App_Permissions_List";
+const QString systemAppPermissionDconfKey  = "System_App_Permissions_List";
+
+PhasePMDconfig::PhasePMDconfig()
+{
 }
 
-PhasePMDconfig::~PhasePMDconfig() {
+PhasePMDconfig::~PhasePMDconfig()
+{
 }
 
 // 获取应用的权限列表
-QStringList PhasePMDconfig::getPermissionList(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey) {
-    QString appPermissionsKey = generateAppPermissionsKey(appId, permissionGroup);
-    QVariantMap appPermissionsMap = PhasePMDconfig::getPermissionMap(appId, permissionGroup, appPermissionDconfKey);
+QStringList PhasePMDconfig::getPermissionList(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey)
+{
+    QString appPermissionsKey = generatePermissionsKey(appId, permissionGroup);
+    QVariantMap appPermissionsMap = PhasePMDconfig::getAppPermissionMap(appId, permissionGroup, appPermissionDconfKey);
     if (!appPermissionsMap.isEmpty()) {
         QStringList appPmList;
         for (auto it = appPermissionsMap.begin(); it != appPermissionsMap.end(); ++it) {
@@ -46,9 +57,10 @@ QStringList PhasePMDconfig::getPermissionList(const QString &appId, const QStrin
 }
 
 // 获取应用对应权限的值
-int PhasePMDconfig::getPermissionValue(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QString &permissionId) {
-    QString appPermissionsKey = generateAppPermissionsKey(appId, permissionGroup);
-    QVariantMap appPermissionsMap = PhasePMDconfig::getPermissionMap(appId, permissionGroup, appPermissionDconfKey);
+int PhasePMDconfig::getPermissionValue(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QString &permissionId)
+{
+    QString appPermissionsKey = generatePermissionsKey(appId, permissionGroup);
+    QVariantMap appPermissionsMap = PhasePMDconfig::getAppPermissionMap(appId, permissionGroup, appPermissionDconfKey);
     if (!appPermissionsMap.isEmpty()) {
         if (appPermissionsMap.contains(permissionId)) {
             if (appPermissionsMap[permissionId].toString() == "") {
@@ -71,10 +83,10 @@ int PhasePMDconfig::getPermissionValue(const QString &appId, const QString &perm
 }
 
 // 获取应用的权限列表以及权限的值
-QVariantMap PhasePMDconfig::getPermissionMap(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey) {
-    QVariant result = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, appPermissionDconfKey, "");
-    QMap<QString, QVariant> appPermissionsMap = result.toMap();
-    QString appPermissionsKey = generateAppPermissionsKey(appId, permissionGroup);
+QVariantMap PhasePMDconfig::getAppPermissionMap(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey)
+{
+    QMap<QString, QVariant> appPermissionsMap = PhasePMDconfig::getPermissionMap(appPermissionDconfKey);
+    QString appPermissionsKey = generatePermissionsKey(appId, permissionGroup);
 
     if (appPermissionsMap.isEmpty()) {
         return {};
@@ -83,10 +95,19 @@ QVariantMap PhasePMDconfig::getPermissionMap(const QString &appId, const QString
     }
 }
 
+QVariantMap PhasePMDconfig::getPermissionMap(const QString& appPermissionDconfKey)
+{
+    QVariant result = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, appPermissionDconfKey, "");
+    QMap<QString, QVariant> appPermissionsMap = result.toMap();
+
+    return appPermissionsMap;
+}
+
 // 设置应用对应权限的值
-bool PhasePMDconfig::setPermissionValue(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QString &permissionId, const QString &permissionValue) {
-    QString appPermissionsKey = generateAppPermissionsKey(appId, permissionGroup);
-    QVariantMap appPermissionsMap = PhasePMDconfig::getPermissionMap(appId, permissionGroup, appPermissionDconfKey);
+bool PhasePMDconfig::setPermissionValue(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QString &permissionId, const QString &permissionValue)
+{
+    QString appPermissionsKey = generatePermissionsKey(appId, permissionGroup);
+    QVariantMap appPermissionsMap = PhasePMDconfig::getAppPermissionMap(appId, permissionGroup, appPermissionDconfKey);
 
     if (appPermissionsMap.isEmpty()) {
         // 将QMap<QString,int>转为QVaraintMap
@@ -107,9 +128,10 @@ bool PhasePMDconfig::setPermissionValue(const QString &appId, const QString &per
 }
 
 // 设置应用的权限列表以及权限的值
-bool PhasePMDconfig::setPermissionInfo(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const PermissionsInfo &permissionsInfo) {
-    QString appPermissionsKey = generateAppPermissionsKey(appId, permissionGroup);
-    QVariantMap appPermissionsMap = PhasePMDconfig::getPermissionMap(appId, permissionGroup, appPermissionDconfKey);
+bool PhasePMDconfig::setPermissionInfo(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const PermissionsInfo &permissionsInfo)
+{
+    QString appPermissionsKey = generatePermissionsKey(appId, permissionGroup);
+    QVariantMap appPermissionsMap = PhasePMDconfig::getAppPermissionMap(appId, permissionGroup, appPermissionDconfKey);
 
     appPermissionsMap.clear();
     // 将QMap<QString,Qstring>转为QVaraintMap
@@ -129,9 +151,10 @@ bool PhasePMDconfig::setPermissionInfo(const QString &appId, const QString &perm
     return true;
 }
 
-void PhasePMDconfig::setPermissionMap(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QVariantMap& dataMap) {
-    QString appPermissionsKey = generateAppPermissionsKey(appId, permissionGroup);
-    QVariantMap appPermissionsMap = PhasePMDconfig::getPermissionMap(appId, permissionGroup, appPermissionDconfKey);
+void PhasePMDconfig::setPermissionMap(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QVariantMap& dataMap)
+{
+    QString appPermissionsKey = generatePermissionsKey(appId, permissionGroup);
+    QVariantMap appPermissionsMap = PhasePMDconfig::getAppPermissionMap(appId, permissionGroup, appPermissionDconfKey);
     if (!appPermissionsMap.isEmpty()) {
         for (auto it = dataMap.begin(); it != dataMap.end(); ++it) {
             if (appPermissionsMap.contains(it.key())) {
@@ -149,3 +172,63 @@ void PhasePMDconfig::setPermissionMap(const QString &appId, const QString &permi
     DconfigSettings::ConfigSaveValue(pmAppId, appPermissionDconfJson, appPermissionDconfKey, toBeWrittenMap);
 }
 
+void PhasePMDconfig::resetAppPermission(const QString &appId, const QString &permissionGroup)
+{
+    QString appPermissionsKey = generatePermissionsKey(appId, permissionGroup);
+    {
+        QVariantMap appPermissionsMap = PhasePMDconfig::getAppPermissionMap(appId, permissionGroup, systemAppPermissionRegistKey);
+        if (!appPermissionsMap.isEmpty()) {
+            appPermissionsMap = {};
+            QVariantMap toBeWrittenMap = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, systemAppPermissionRegistKey, "").toMap();
+            toBeWrittenMap.insert(appPermissionsKey, appPermissionsMap);
+            DconfigSettings::ConfigSaveValue(pmAppId, appPermissionDconfJson, systemAppPermissionRegistKey, toBeWrittenMap);
+        }
+    }
+
+    {
+        QVariantMap appPermissionsMap = PhasePMDconfig::getAppPermissionMap(appId, permissionGroup, systemAppPermissionDconfKey);
+        if (!appPermissionsMap.isEmpty()) {
+            appPermissionsMap = {};
+            QVariantMap toBeWrittenMap = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, systemAppPermissionDconfKey, "").toMap();
+            toBeWrittenMap.insert(appPermissionsKey, appPermissionsMap);
+            DconfigSettings::ConfigSaveValue(pmAppId, appPermissionDconfJson, systemAppPermissionDconfKey, toBeWrittenMap);
+        }
+    }
+
+    {
+        QVariantMap appPermissionsMap = PhasePMDconfig::getAppPermissionMap(appId, permissionGroup, sessionAppPermissionDconfKey);
+        if (!appPermissionsMap.isEmpty()) {
+            appPermissionsMap = {};
+            QVariantMap toBeWrittenMap = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, sessionAppPermissionDconfKey, "").toMap();
+            toBeWrittenMap.insert(appPermissionsKey, appPermissionsMap);
+            DconfigSettings::ConfigSaveValue(pmAppId, appPermissionDconfJson, sessionAppPermissionDconfKey, toBeWrittenMap);
+        }
+    }
+}
+
+bool PhasePMDconfig::getPermissionEnable(const QString &permissionGroup, const QString &permissionId)
+{
+    QString pmEnableKey = generatePermissionsKey(permissionGroup, permissionId);
+    QVariantMap pmEnableMap = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, permissionsEnable, "").toMap();
+
+    if (pmEnableMap.contains(pmEnableKey)) {
+        return pmEnableMap[pmEnableKey].toBool();
+    }
+
+    // 默认值为开启
+    return true;
+}
+
+void PhasePMDconfig::setPermissionEnable(const QString &permissionGroup, const QString &permissionId, const bool &enable)
+{
+    QString pmEnableKey = generatePermissionsKey(permissionGroup, permissionId);
+    QVariantMap pmEnableMap = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, permissionsEnable, "").toMap();
+
+    if (pmEnableMap.contains(pmEnableKey)) {
+        pmEnableMap[pmEnableKey] = enable;
+    } else {
+        pmEnableMap.insert(pmEnableKey, enable);
+    }
+
+    DconfigSettings::ConfigSaveValue(pmAppId, appPermissionDconfJson, permissionsEnable, pmEnableMap);
+}
