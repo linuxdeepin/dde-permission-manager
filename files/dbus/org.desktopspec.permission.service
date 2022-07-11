@@ -1,3 +1,4 @@
 [D-BUS Service]
 Name=org.desktopspec.permission
-Exec=/usr/bin/dde-permission-manager
+SystemdService=org.desktopspec.permission.service
+Exec=/usr/bin/false
