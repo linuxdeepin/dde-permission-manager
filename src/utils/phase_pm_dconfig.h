@@ -69,7 +69,7 @@ public:
     // 获取权限列表以及对应值
     static QVariantMap getPermissionMap(const QString& appPermissionDconfKey);
     // 获取权限对应的总开关
-    static bool getPermissionEnable(const QString &permissionGroup, const QString &permissionId);
+    static bool getPermissionEnable(const QString &permissionGroup, const QString &permissionId, const QString& pmEnableDconfKey);
 
     // 设置应用对应权限的值
     static bool setPermissionValue(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QString &permissionId, const QString &permissionValue);
@@ -78,7 +78,7 @@ public:
     // 设置应用的权限列表以及权限的值
     static void setPermissionMap(const QString &appId, const QString &permissionGroup, const QString& appPermissionDconfKey, const QVariantMap& toBeWriteMap);
     // 设置权限对应的总开关
-    static void setPermissionEnable(const QString &permissionGroup, const QString &permissionId, const bool &enable);
+    static void setPermissionEnable(const QString &permissionGroup, const QString &permissionId, const bool &enable, const QString& pmEnableDconfKey);
     // 重置应用的权限
     static void resetAppPermission(const QString &appId, const QString &permissionGroup);
 };

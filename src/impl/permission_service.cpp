@@ -15,6 +15,8 @@ DCORE_USE_NAMESPACE
 
 const QString polikitPermissionActionId = "org.desktopspec.permission.modify-app-permissions";
 const QString dbusErrorName = "org.desktopspec.permission.";
+const QString sessionPermissionsEnable = "Session_Permissions_Enable";
+const QString systemPermissionsEnable  = "System_Permissions_Enable";
 
 PermissionService::PermissionService(QObject *parent) : QObject(parent), QDBusContext()
 {
@@ -217,11 +219,15 @@ QString PermissionService::parseAppPermissionKeyDconf(const QString& appPermissi
         needShowDialog = true;
         allowSkipLimitCheck = true;
     } else {
-        return strAppPmDconfRet;
+        // 直接返回，会出现普通用户访问系统级权限，当在system级别中找到后，直接返回 异常
+        if (registerMode == "notlimit") {
+            return strAppPmDconfRet;
+        }
+        needShowDialog = true;
     }
 
     if (needShowDialog) {
-        if (registerMode == "limit" && !allowSkipLimitCheck) {
+        if (registerMode != "notlimit" && !allowSkipLimitCheck) {
             qWarning() << QString("Currently in limit mode, the permissionId [%1] is not registered").arg(permissionId);
             sendErrorReply(dbusErrorName + "RegistModeError","This permission instance needs to be registered.");
             return "";
@@ -317,12 +323,6 @@ void PermissionService::adjustPermissionInfo(const QString& appPermissionDconfKe
         QVariantMap mapTmp = it.value().toMap();
         for (auto it1 = mapTmp.begin(); it1 != mapTmp.end(); ++it1) {
             pmName = it1.key();
-            if (appPermissionDconfKey == sessionAppPermissionDconfKey) {
-                m_sessionPermissionName.append(pmName);
-            } else {
-                m_systemPermissionName.append(pmName);
-            }
-
             pmValue = it1.value().toString();
             if (m_groupPermissionInfo.isEmpty()) {
                 // 没有group需要新增结构
@@ -423,52 +423,14 @@ QString PermissionService::GetPermissionInfo()
     return doc.toJson(QJsonDocument::Compact);
 }
 
-void PermissionService::getPmTypeList()
-{
-    {
-        QVariantMap permissionMap = PhasePMDconfig::getPermissionMap(sessionAppPermissionDconfKey);
-        for (auto it = permissionMap.begin(); it != permissionMap.end(); ++it) {
-            QStringList keyList = it.key().split("+");
-            if (keyList.isEmpty() || keyList.size() != 2) {
-                qWarning() << "key phase failed: " << it.key();
-                break;
-            }
-
-            QVariantMap mapTmp = it.value().toMap();
-            for (auto it1 = mapTmp.begin(); it1 != mapTmp.end(); ++it1) {
-                if (!m_sessionPermissionName.contains(it1.key())) {
-                    m_sessionPermissionName.append(it1.key());
-                }
-            }
-        }
-    }
-
-    {
-        QVariantMap permissionMap = PhasePMDconfig::getPermissionMap(systemAppPermissionDconfKey);
-        for (auto it = permissionMap.begin(); it != permissionMap.end(); ++it) {
-            QStringList keyList = it.key().split("+");
-            if (keyList.isEmpty() || keyList.size() != 2) {
-                qWarning() << "key phase failed: " << it.key();
-                break;
-            }
-
-            QVariantMap mapTmp = it.value().toMap();
-            for (auto it1 = mapTmp.begin(); it1 != mapTmp.end(); ++it1) {
-                if (!m_systemPermissionName.contains(it1.key())) {
-                    m_systemPermissionName.append(it1.key());
-                }
-            }
-        }
-    }
-}
-
 bool PermissionService::SetPermissionInfo(const QString &appId, const QString &permissionGroup, const QString &permissionId, const QString &value)
 {
-    if (m_sessionPermissionName.isEmpty() && m_systemPermissionName.isEmpty()) {
-        getPmTypeList();
+    PermissionPolicy policy(permissionGroup, permissionId);
+    if (!policy.isValid()) {
+        return false;
     }
 
-    if (m_sessionPermissionName.contains(permissionId)) {
+    if (policy.type() == "session") {
         int pmDconfRet = PhasePMDconfig::getPermissionValue(appId, permissionGroup, sessionAppPermissionDconfKey, permissionId);
         // 此接口仅resist或者request之后的权限才能被设置
         if (pmDconfRet > dconfKeyInvalid && pmDconfRet < dconfMax) {
@@ -479,7 +441,7 @@ bool PermissionService::SetPermissionInfo(const QString &appId, const QString &p
         return false;
     }
 
-    if (m_systemPermissionName.contains(permissionId)) {
+    if (policy.type() == "system") {
         if (checkUserIsAdmin() == UserType::UserTypeStandard) {
             // 普通用户想要访问系统级权限 弹出鉴权窗口
             if (!checkAuth(polikitPermissionActionId)) {
@@ -504,38 +466,44 @@ bool PermissionService::SetPermissionInfo(const QString &appId, const QString &p
 
 bool PermissionService::GetPermissionEnable(const QString &permissionGroup, const QString &permissionId)
 {
-    return PhasePMDconfig::getPermissionEnable(permissionGroup, permissionId);
+    PermissionPolicy policy(permissionGroup, permissionId);
+    if (!policy.isValid()) {
+        return false;
+    }
+
+    QString pmEnableDconfKey = "";
+    if (policy.type() == "session") {
+        pmEnableDconfKey = sessionPermissionsEnable;
+    } else if (policy.type() == "system") {
+        pmEnableDconfKey = systemPermissionsEnable;
+    } else {
+        qWarning() << QString("policy type is invalid [%1].").arg(policy.type());
+        return false;
+    }
+
+    return PhasePMDconfig::getPermissionEnable(permissionGroup, permissionId, pmEnableDconfKey);;
 }
 
 bool PermissionService::SetPermissionEnable(const QString &permissionGroup, const QString &permissionId, const bool &enable)
 {
-    if (m_sessionPermissionName.isEmpty() && m_systemPermissionName.isEmpty()) {
-        getPmTypeList();
+    PermissionPolicy policy(permissionGroup, permissionId);
+    if (!policy.isValid()) {
+        return false;
     }
 
-    if (m_sessionPermissionName.contains(permissionId)) {
-        PhasePMDconfig::setPermissionEnable(permissionGroup, permissionId, enable);
+    if (policy.type() == "session") {
+        PhasePMDconfig::setPermissionEnable(permissionGroup, permissionId, enable, sessionPermissionsEnable);
         Q_EMIT PermissionEnableChanged(permissionGroup, permissionId, enable);
         return true;
-    }
-
-    if (checkUserIsAdmin() == UserType::UserTypeAdmin) {
-        PhasePMDconfig::setPermissionEnable(permissionGroup, permissionId, enable);
-        Q_EMIT PermissionEnableChanged(permissionGroup, permissionId, enable);
-        return true;
-    } else {
-        if (m_systemPermissionName.contains(permissionId)) {
-            // 普通用户想要访问系统级权限 弹出鉴权窗口
-            if (checkAuth(polikitPermissionActionId)) {
-                PhasePMDconfig::setPermissionEnable(permissionGroup, permissionId, enable);
-                Q_EMIT PermissionEnableChanged(permissionGroup, permissionId, enable);
-                return true;
-            }
-            return false;
-        } else {
-            // 此分支理论不存在，控制中心值由pm提供，此分支表示控制中心出现了pm不存在的权限名
-            qWarning() << "This permission name is incorrect.";
-            return false;
+    } else if (policy.type() == "system") {
+        if (checkUserIsAdmin() == UserType::UserTypeAdmin) {
+            PhasePMDconfig::setPermissionEnable(permissionGroup, permissionId, enable, systemPermissionsEnable);
+            Q_EMIT PermissionEnableChanged(permissionGroup, permissionId, enable);
+            return true;
+        } else if (checkAuth(polikitPermissionActionId)) {
+            PhasePMDconfig::setPermissionEnable(permissionGroup, permissionId, enable, systemPermissionsEnable);
+            Q_EMIT PermissionEnableChanged(permissionGroup, permissionId, enable);
+            return true;
         }
     }
 

@@ -106,12 +106,9 @@ private:
     PermissionInfo addPermissionInfo(const QString &pmName, const QString &appName, const QString &pmValue);
     GroupPermissionInfo addGroupPermissionInfo(const QString &group, const QString &pmName, const QString &appName, const QString &pmValue);
     void adjustPermissionInfo(const QString& appPermissionDconfKey);
-    void getPmTypeList();
 
 private:
     QList<GroupPermissionInfo> m_groupPermissionInfo;
-    QList<QString> m_sessionPermissionName;
-    QList<QString> m_systemPermissionName;
 };
 
 #endif /* AD0CF546_BF40_4B81_864F_93F98EEE99AF */

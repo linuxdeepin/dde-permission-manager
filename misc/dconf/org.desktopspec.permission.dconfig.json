@@ -32,13 +32,23 @@
             "permissions": "readwrite",
             "visibility": "private"
         },
-        "Permissions_Enable": {
+        "Session_Permissions_Enable": {
             "value": {},
             "serial": 0,
             "flags": [],
-            "name": "Permissions_Enable",
+            "name": "Session_Permissions_Enable",
             "name[zh_CN]": "*****",
-            "description": "Switch with different permissions.",
+            "description": "Switch of session-level permissions.",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "System_Permissions_Enable": {
+            "value": {},
+            "serial": 0,
+            "flags": ["global"],
+            "name": "System_Permissions_Enable",
+            "name[zh_CN]": "*****",
+            "description": "Switch of system-level permissions.",
             "permissions": "readwrite",
             "visibility": "private"
         }

@@ -26,7 +26,6 @@
 
 const QString pmAppId = "dde-permission-manager";
 const QString appPermissionDconfJson = "org.desktopspec.permission.dconfig";
-const QString permissionsEnable = "Permissions_Enable";
 
 const QString systemAppPermissionRegistKey = "System_App_Permissions_Regist_Info";
 const QString sessionAppPermissionDconfKey = "Session_App_Permissions_List";
@@ -206,23 +205,24 @@ void PhasePMDconfig::resetAppPermission(const QString &appId, const QString &per
     }
 }
 
-bool PhasePMDconfig::getPermissionEnable(const QString &permissionGroup, const QString &permissionId)
+bool PhasePMDconfig::getPermissionEnable(const QString &permissionGroup, const QString &permissionId, const QString& pmEnableDconfKey)
 {
     QString pmEnableKey = generatePermissionsKey(permissionGroup, permissionId);
-    QVariantMap pmEnableMap = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, permissionsEnable, "").toMap();
+    QVariantMap pmEnableMap = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, pmEnableDconfKey, "").toMap();
 
     if (pmEnableMap.contains(pmEnableKey)) {
         return pmEnableMap[pmEnableKey].toBool();
     }
 
     // 默认值为开启
+    qWarning() << QString("[%1] [%2] is not applied for in [%3]. The default value is returned.").arg(pmEnableDconfKey, permissionGroup, permissionId);
     return true;
 }
 
-void PhasePMDconfig::setPermissionEnable(const QString &permissionGroup, const QString &permissionId, const bool &enable)
+void PhasePMDconfig::setPermissionEnable(const QString &permissionGroup, const QString &permissionId, const bool &enable, const QString& pmEnableDconfKey)
 {
     QString pmEnableKey = generatePermissionsKey(permissionGroup, permissionId);
-    QVariantMap pmEnableMap = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, permissionsEnable, "").toMap();
+    QVariantMap pmEnableMap = DconfigSettings::ConfigValue(pmAppId, appPermissionDconfJson, pmEnableDconfKey, "").toMap();
 
     if (pmEnableMap.contains(pmEnableKey)) {
         pmEnableMap[pmEnableKey] = enable;
@@ -230,5 +230,5 @@ void PhasePMDconfig::setPermissionEnable(const QString &permissionGroup, const Q
         pmEnableMap.insert(pmEnableKey, enable);
     }
 
-    DconfigSettings::ConfigSaveValue(pmAppId, appPermissionDconfJson, permissionsEnable, pmEnableMap);
+    DconfigSettings::ConfigSaveValue(pmAppId, appPermissionDconfJson, pmEnableDconfKey, pmEnableMap);
 }
