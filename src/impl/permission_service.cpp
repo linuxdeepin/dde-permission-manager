@@ -51,6 +51,7 @@ QString PermissionService::Request(const QString &appId, const QString &permissi
 
     if (!GetPermissionEnable(permissionGroup, permissionId)) {
         // 权限总开关关闭时，无论请求什么什么权限，直接返回禁止
+        ShowDisablePermissionDialog(appId, permissionGroup, permissionId);
         return QString::number(dconfDeny);
     }
 
@@ -138,8 +139,7 @@ void PermissionService::ShowDisablePermissionDialog(const QString &appId, const 
 
     if (reply.value() == options[1]) {
         QProcess p;
-        // TODO 后面准确跳到隐私安全模块
-        p.start("busctl --user call com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter Show");
+        p.start("dbus-send --session --print-reply --type=method_call --dest=org.deepin.dde.ControlCenter /org/deepin/dde/ControlCenter org.deepin.dde.ControlCenter.ShowPage string:\"privacyAndSecurity\"");
         p.waitForFinished(10000);
         p.close();
     }
