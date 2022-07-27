@@ -16,6 +16,6 @@ enum UserType {
 };
 
 UserType checkUserIsAdmin();
-bool checkAuth(const QString &actionId);
+bool checkAuth(const QString &actionId, const int &pid);
 
 #endif // COMMON_H

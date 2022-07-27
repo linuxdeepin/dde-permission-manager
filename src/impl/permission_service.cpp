@@ -444,7 +444,10 @@ bool PermissionService::SetPermissionInfo(const QString &appId, const QString &p
     if (policy.type() == "system") {
         if (checkUserIsAdmin() == UserType::UserTypeStandard) {
             // 普通用户想要访问系统级权限 弹出鉴权窗口
-            if (!checkAuth(polikitPermissionActionId)) {
+            const QDBusConnection &conn = connection();
+            const QDBusMessage &msg = message();
+            const int &pid = conn.interface()->servicePid(msg.service()).value();
+            if (!checkAuth(polikitPermissionActionId, pid)) {
                 qWarning() << "checkAuth failed id: " << polikitPermissionActionId;
                 return false;
             }
@@ -500,10 +503,15 @@ bool PermissionService::SetPermissionEnable(const QString &permissionGroup, cons
             PhasePMDconfig::setPermissionEnable(permissionGroup, permissionId, enable, systemPermissionsEnable);
             Q_EMIT PermissionEnableChanged(permissionGroup, permissionId, enable);
             return true;
-        } else if (checkAuth(polikitPermissionActionId)) {
-            PhasePMDconfig::setPermissionEnable(permissionGroup, permissionId, enable, systemPermissionsEnable);
-            Q_EMIT PermissionEnableChanged(permissionGroup, permissionId, enable);
-            return true;
+        } else {
+                const QDBusConnection &conn = connection();
+                const QDBusMessage &msg = message();
+                const int &pid = conn.interface()->servicePid(msg.service()).value();
+                if (checkAuth(polikitPermissionActionId, pid)) {
+                PhasePMDconfig::setPermissionEnable(permissionGroup, permissionId, enable, systemPermissionsEnable);
+                Q_EMIT PermissionEnableChanged(permissionGroup, permissionId, enable);
+                return true;
+            }
         }
     }
 

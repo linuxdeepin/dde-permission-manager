@@ -10,10 +10,10 @@
 
 using namespace PolkitQt1;
 
-bool checkAuth(const QString &actionId)
+bool checkAuth(const QString &actionId, const int &pid)
 {
     Authority::Result authenticationResult;
-    authenticationResult = Authority::instance()->checkAuthorizationSync(actionId, UnixProcessSubject(getpid()),
+    authenticationResult = Authority::instance()->checkAuthorizationSync(actionId, UnixProcessSubject(pid),
                                                            Authority::AllowUserInteraction);
 
     qWarning() << "authenticationResult: " << authenticationResult;
