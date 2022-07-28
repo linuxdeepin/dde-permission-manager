@@ -53,7 +53,7 @@ QString PermissionService::Request(const QString &appId, const QString &permissi
 
     if (!GetPermissionEnable(permissionGroup, permissionId)) {
         // 权限总开关关闭时，无论请求什么什么权限，直接返回禁止
-        ShowDisablePermissionDialog(appId, permissionGroup, permissionId);
+        // 不需要弹框，返回禁止后，调用方会触发弹窗逻辑
         return QString::number(dconfDeny);
     }
 
