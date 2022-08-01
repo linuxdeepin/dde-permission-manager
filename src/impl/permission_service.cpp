@@ -259,6 +259,12 @@ QString PermissionService::parseAppPermissionKeyDconf(const QString& appPermissi
         QString ret = QString::number(PermissionOption::getInstance()->getId(reply.value()));
         PhasePMDconfig::setPermissionValue(appId, permissionGroup, appPermissionDconfKey, permissionId, ret);
         Q_EMIT PermissionInfoChanged();
+
+        // 用户通过request接口选择禁止权限，此时给调用方返回权限值2，调用方不去调起禁止权限框
+        if (reply.value() == "deny") {
+            qWarning() << "disable permission is selected";
+            return "2";
+        }
         return ret;
     }
 
