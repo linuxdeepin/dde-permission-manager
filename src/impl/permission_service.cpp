@@ -141,7 +141,10 @@ void PermissionService::ShowDisablePermissionDialog(const QString &appId, const 
 
     if (reply.value() == options[1]) {
         QProcess p;
-        p.start("dbus-send --session --print-reply --type=method_call --dest=org.deepin.dde.ControlCenter /org/deepin/dde/ControlCenter org.deepin.dde.ControlCenter.ShowPage string:\"privacyAndSecurity\"");
+        // 还是采用 com.deepin.dde.ControlCenter ，前端 org.deepin.dde.ControlCenter todo ，后续会修改
+        QString showDccCmd = QString("dbus-send --session --print-reply --type=method_call --dest=com.deepin.dde.ControlCenter "
+                                     "/com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowPage string:privacyAndSecurity/%1").arg(permissionId);
+        p.start(showDccCmd);
         p.waitForFinished(10000);
         p.close();
     }
