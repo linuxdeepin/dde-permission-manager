@@ -32,9 +32,9 @@ UserType checkUserIsAdmin()
         return UserTypeInvalid;
     }
 
-    QDBusInterface inter = QDBusInterface("com.deepin.daemon.Accounts",
-                "/com/deepin/daemon/Accounts",
-                "com.deepin.daemon.Accounts",
+    QDBusInterface inter = QDBusInterface("org.deepin.daemon.Accounts1",
+                "/org/deepin/daemon/Accounts1",
+                "org.deepin.daemon.Accounts1",
                 QDBusConnection::systemBus());
 
     QDBusReply<QString> reply = inter.call("FindUserByName", QString(user->pw_name));
@@ -44,9 +44,9 @@ UserType checkUserIsAdmin()
     }
 
     QString path = reply.value();
-    QDBusInterface inter1 = QDBusInterface("com.deepin.daemon.Accounts",
+    QDBusInterface inter1 = QDBusInterface("org.deepin.daemon.Accounts1",
                 path,
-                "com.deepin.daemon.Accounts.User",
+                "org.deepin.daemon.Accounts1.User",
                 QDBusConnection::systemBus());
 
     QVariant ret = inter1.property("AccountType");
