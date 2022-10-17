@@ -235,6 +235,9 @@ QString PermissionService::parseAppPermissionKeyDconf(const QString& appPermissi
 
         // 普通用户想要访问系统级权限，直接返回-1
         if (checkUserIsAdmin() == UserType::UserTypeStandard && policy.type() == "system") {
+            // 此时需要写入应用配置文件， value为空
+            PhasePMDconfig::setPermissionValue(appId, permissionGroup, appPermissionDconfKey, permissionId, "");
+            Q_EMIT PermissionInfoChanged();
             sendErrorReply(dbusErrorName + "SystemLevelRestrictions","users want access to system-level permissions.");
             return "";
         }
