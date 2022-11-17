@@ -2,7 +2,7 @@
 #include <QTranslator>
 
 #include "clientadaptor.h"
-#include "permissionadaptor.h"
+#include "permission1adaptor.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -19,13 +19,13 @@ int main(int argc, char** argv)
     PermissionService* service = new PermissionService;
 
     new ClientAdaptor(client);
-    new PermissionAdaptor(service);
+    new Permission1Adaptor(service);
 
-    QDBusConnection::sessionBus().registerService("org.desktopspec.permission.Client");
-    QDBusConnection::sessionBus().registerObject("/org/desktopspec/permission/Client", client);
+    QDBusConnection::sessionBus().registerService("org.deepin.dde.Permission1.Client");
+    QDBusConnection::sessionBus().registerObject("/org/deepin.dde/Permission1/Client", client);
 
-    QDBusConnection::sessionBus().registerService("org.desktopspec.permission");
-    QDBusConnection::sessionBus().registerObject("/org/desktopspec/permission", service);
+    QDBusConnection::sessionBus().registerService("org.deepin.dde.Permission1");
+    QDBusConnection::sessionBus().registerObject("/org/deepin.dde/Permission1", service);
 
     app->setQuitOnLastWindowClosed(false);
 

@@ -11,16 +11,16 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(Polkit-qt5 REQUIRED IMPORTED_TARGET polkit-qt5-agent-1 polkit-qt5-1)
 
 qt5_add_dbus_adaptor(ADAPTER_SOURCES
-                     ../dbus/org.desktopspec.permission.xml
+                     ../dbus/org.deepin.dde.Permission1.xml
                      impl/permission_service.h
                      PermissionService)
 qt5_add_dbus_adaptor(ADAPTER_SOURCES
-                     ../dbus/org.desktopspec.permission.client.xml
+                     ../dbus/org.deepin.dde.Permission1.Client.xml
                      impl/permission_client.h
                      PermissionClient
                      )
 qt5_add_dbus_interfaces(DBUS_INTERFACES
-                     ../dbus/org.desktopspec.permission.client.xml
+                     ../dbus/org.deepin.dde.Permission1.Client.xml
                      )
 set(SRCS
     main.cpp

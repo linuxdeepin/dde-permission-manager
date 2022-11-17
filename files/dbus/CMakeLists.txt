@@ -1,5 +1,5 @@
 set(SERVICES
-    org.desktopspec.permission.service
+    org.deepin.dde.Permission1.service
 )
 
 install(FILES ${SERVICES}

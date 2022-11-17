@@ -13,8 +13,8 @@
 
 DCORE_USE_NAMESPACE
 
-const QString polikitPermissionActionId = "org.desktopspec.permission.modify-app-permissions";
-const QString dbusErrorName = "org.desktopspec.permission.";
+const QString polikitPermissionActionId = "org.deepin.dde.permission.modify-app-permissions";
+const QString dbusErrorName = "org.deepin.dde.Permission1.";
 const QString sessionPermissionsEnable = "Session_Permissions_Enable";
 const QString systemPermissionsEnable  = "System_Permissions_Enable";
 
@@ -131,7 +131,7 @@ void PermissionService::ShowDisablePermissionDialog(const QString &appId, const 
         return;
     }
     const QStringList options = {"Cancel", "Go to Settings"};
-    org::desktopspec::permission::client client("org.desktopspec.permission.Client", "/org/desktopspec/permission/Client", QDBusConnection::sessionBus());
+    org::deepin::dde::Permission1::Client client("org.deepin.dde.Permission1.Client", "/org/deepin/dde/Permission1/Client", QDBusConnection::sessionBus());
     auto reply = client.ShowDisablePermissionDialog(policy.title("denyPrompt").arg(appId), policy.description("denyPrompt"), options);
     reply.waitForFinished();
     if (reply.isError()) {
@@ -151,7 +151,7 @@ void PermissionService::ShowDisablePermissionDialog(const QString &appId, const 
 
 int showRequestDialog(const QString &appId, const PermissionPolicy& policy, const QString &title, const QString &description)
 {
-    org::desktopspec::permission::client client("org.desktopspec.permission.Client", "/org/desktopspec/permission/Client", QDBusConnection::sessionBus());
+    org::deepin::dde::Permission1::Client client("org.deepin.dde.Permission1.Client", "/org/deepin/dde/Permission1/Client", QDBusConnection::sessionBus());
     auto                                 reply = client.Request(title.arg(appId), description, policy.prefer(), policy.options());
     reply.waitForFinished();
     if (reply.isError()) {
@@ -242,7 +242,7 @@ QString PermissionService::parseAppPermissionKeyDconf(const QString& appPermissi
             return "";
         }
 
-        org::desktopspec::permission::client client("org.desktopspec.permission.Client", "/org/desktopspec/permission/Client", QDBusConnection::sessionBus());
+        org::deepin::dde::Permission1::Client client("org.deepin.dde.Permission1.Client", "/org/deepin/dde/Permission1/Client", QDBusConnection::sessionBus());
         auto                                 reply = client.Request(title.arg(appId), description, policy.prefer(), policy.options());
         reply.waitForFinished();
         if (reply.isError()) {

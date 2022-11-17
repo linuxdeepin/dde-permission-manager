@@ -1,5 +1,5 @@
 set(POLKIT-ACTION_FILES
-    org.desktopspec.permission.modify-app-permissions.policy
+    org.deepin.dde.permission.modify-app-permissions.policy
 )
 
 install(FILES ${POLKIT-ACTION_FILES} DESTINATION /usr/share/polkit-1/actions/)

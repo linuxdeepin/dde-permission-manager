@@ -1,5 +1,5 @@
 set(SERVICES
-    org.desktopspec.permission.service
+    dde-permission-manager.service
 )
 
 install(FILES ${SERVICES}

@@ -1,4 +1,4 @@
-<interface name="org.desktopspec.permission.client">
+<interface name="org.deepin.dde.Permission1.Client">
     <method name="Request">
       <arg direction="in" type="s" name="title" />
       <arg direction="in" type="s" name="description" />

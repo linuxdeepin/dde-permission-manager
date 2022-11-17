@@ -1,5 +1,5 @@
 set(DCONFIG_FILES
-    org.desktopspec.permission.dconfig.json
+    org.deepin.dde.permission.dconfig1.json
 )
 
 install(FILES ${DCONFIG_FILES} DESTINATION /usr/share/dsg/configs/dde-permission-manager)

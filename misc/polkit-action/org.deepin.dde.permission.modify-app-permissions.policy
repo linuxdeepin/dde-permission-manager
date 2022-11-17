@@ -6,7 +6,7 @@
   <vendor>LinuxDeepin</vendor>
   <vendor_url>https://home.uniontech.com//</vendor_url>
 
-  <action id="org.desktopspec.permission.modify-app-permissions">
+  <action id="org.deepin.dde.permission.modify-app-permissions">
     <description>Modify system-level application permissions</description>
     <message>Authentication is required to change the system-level permissions</message>
     <defaults>

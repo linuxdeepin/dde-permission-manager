@@ -25,7 +25,7 @@
 #include <QDebug>
 
 const QString pmAppId = "dde-permission-manager";
-const QString appPermissionDconfJson = "org.desktopspec.permission.dconfig";
+const QString appPermissionDconfJson = "org.deepin.dde.permission.dconfig1";
 
 const QString systemAppPermissionRegistKey = "System_App_Permissions_Regist_Info";
 const QString sessionAppPermissionDconfKey = "Session_App_Permissions_List";
