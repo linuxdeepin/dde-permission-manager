@@ -1,3 +1,10 @@
+dde-permission-manager (1.0.5) unstable; urgency=medium
+
+  [ TagBuilder ]
+  * feat: 接口更变，增加V23接口(Task: 207483)(Influence: 接口更变)
+
+ -- zhaoyingzhen <zhaoyingzhen@uniontech.com>  Tue, 13 Dec 2022 19:04:09 +0800
+
 dde-permission-manager (1.0.4) unstable; urgency=medium
 
   [ Deepin Packages Builder ]
