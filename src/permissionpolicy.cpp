@@ -16,6 +16,7 @@ PermissionPolicy::PermissionPolicy(const QString& permissionGroup, const QString
             return;
         }
         const QJsonObject& obj = QJsonDocument::fromJson(file.readAll()).object();
+        file.close()
         m_id = obj["id"].toString();
         m_skip_auto_allow = obj["skip_auto_allow"].toBool();
         m_name = obj["name"].toString();
