@@ -1,3 +1,8 @@
+// Copyright (C) 2023 ~ 2023 Deepin Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 #include "permission_client.h"
 #include "permissionoption.h"
 

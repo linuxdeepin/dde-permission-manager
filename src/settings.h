@@ -1,3 +1,8 @@
+// Copyright (C) 2023 ~ 2023 Deepin Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 #ifndef E19812E8_52FA_47ED_9D70_A707CE2E25E2
 #define E19812E8_52FA_47ED_9D70_A707CE2E25E2
 
