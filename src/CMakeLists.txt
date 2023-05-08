@@ -52,12 +52,11 @@ add_executable(dde-permission-manager
     ${DBUS_INTERFACES}
 )
 
-target_link_libraries(dde-permission-manager
+target_link_libraries(dde-permission-manager PUBLIC
     Qt5::Core
     Qt5::DBus
     Qt5::Widgets
-    dtkcore
-    dtkwidget
+    ${DtkWidget_LIBRARIES}
     PkgConfig::Polkit-qt5
 )
 
