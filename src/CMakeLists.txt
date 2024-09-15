@@ -56,7 +56,8 @@ target_link_libraries(dde-permission-manager PUBLIC
     Qt5::Core
     Qt5::DBus
     Qt5::Widgets
-    ${DtkWidget_LIBRARIES}
+    Dtk::Core
+    Dtk::Widget
     PkgConfig::Polkit-qt5
 )
 
